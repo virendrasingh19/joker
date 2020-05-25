@@ -13,6 +13,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Movie Plus"),
+        leading: Icon(
+          Icons.movie_creation
+        ),
       ),
       body: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
