@@ -78,4 +78,3 @@ class _PopularMovieState extends State<PopularMovie> {
     ));
   }
 }
-git
