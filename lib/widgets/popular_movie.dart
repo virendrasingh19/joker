@@ -20,20 +20,30 @@ class _PopularMovieState extends State<PopularMovie> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<MovieListResponse>(
-      stream: moviesBloc.subject.stream,
-      builder: (context, AsyncSnapshot<MovieListResponse> snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-            return _buildErrorWidget(snapshot.data.error);
-          }
-          return _buildHomeWidget(snapshot.data);
-        } else if (snapshot.hasError) {
-          return _buildErrorWidget(snapshot.error);
-        } else {
-          return _buildLoadingWidget();
-        }
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        header(),
+        SizedBox(
+          height: 5.0,
+        ),
+        StreamBuilder<MovieListResponse>(
+          stream: moviesBloc.subject.stream,
+          builder: (context, AsyncSnapshot<MovieListResponse> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data.error != null &&
+                  snapshot.data.error.length > 0) {
+                return _buildErrorWidget(snapshot.data.error);
+              }
+              return _buildHomeWidget(snapshot.data);
+            } else if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error);
+            } else {
+              return _buildLoadingWidget();
+            }
+          },
+        )
+      ],
     );
   }
 
@@ -65,16 +75,39 @@ class _PopularMovieState extends State<PopularMovie> {
   }
 
   Widget _buildHomeWidget(MovieListResponse response) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          response.movies.length.toString(),
-          style: TextStyle(
-              color: Colors.black, fontSize: 23.0, fontWeight: FontWeight.bold),
-        )
-      ],
-    ));
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      padding: EdgeInsets.only(left: 10.0),
+      child: showMovieInCard(response),
+    );
+  }
+
+  Widget header() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Text("Popular Movie",
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Open Sans',
+                fontSize: 26)),
+      ),
+    );
+  }
+
+  Widget showMovieInCard(MovieListResponse response) {
+    return ListView.builder(
+      itemCount: response.movies.length,
+      itemBuilder: (context, index) {
+        return Card(
+          elevation: 2,
+          child: Text(
+            response.movies[index].title,
+          ),
+        );
+      },
+    );
   }
 }
