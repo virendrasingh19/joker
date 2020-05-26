@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:movieapp/bloc/get_movies.dart';
 import 'package:movieapp/module/MovieList.dart';
 import 'package:movieapp/module/movie_list_response.dart';
@@ -76,15 +77,16 @@ class _PopularMovieState extends State<PopularMovie> {
 
   Widget _buildHomeWidget(MovieListResponse response) {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.only(left: 10.0),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      height: 500,
+      width: 500,
       child: showMovieInCard(response),
     );
   }
 
   Widget header() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
+      padding: const EdgeInsets.fromLTRB(20, 20, 8, 20),
       child: Align(
         alignment: Alignment.topLeft,
         child: Text("Popular Movie",
@@ -100,11 +102,24 @@ class _PopularMovieState extends State<PopularMovie> {
   Widget showMovieInCard(MovieListResponse response) {
     return ListView.builder(
       itemCount: response.movies.length,
+      scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        return Card(
-          elevation: 2,
-          child: Text(
-            response.movies[index].title,
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30.0),
+              child: FadeInImage.assetNetwork(
+                fit: BoxFit.fill,
+                placeholder: 'assets/images/avanger.jpg',
+                image: "https://image.tmdb.org/t/p/w500/" +
+                    response.movies[index].posterPath,
+              ),
+            ),
           ),
         );
       },
